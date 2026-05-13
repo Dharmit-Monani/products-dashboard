@@ -5,29 +5,6 @@
 
 ---
 
-## 📸 Screenshots
-
-### Dashboard
-![Dashboard](./screenshots/dashboard.png)
-
-### All Products
-![All Products](./screenshots/all-products.png)
-
-### Product Details
-![Product Details](./screenshots/product-details.png)
-
-### Create Product
-![Create Product](./screenshots/create-product.png)
-
-### Edit Product
-![Edit Product](./screenshots/edit-product.png)
-
-### Delete Confirmation
-![Delete Confirmation](./screenshots/delete-confirm.png)
-
-### Error State
-![Error State](./screenshots/error-state.png)
-
 ---
 
 ## ✨ Features
@@ -224,6 +201,8 @@ products-dashboard/
 |------|-----------|-------------|
 | Task 1 | [products-api](https://github.com/Dharmit-Monani/products-api) | Node.js + Express + MongoDB REST API |
 | Task 2 | [products-dashboard](https://github.com/Dharmit-Monani/products-dashboard) | React SPA Frontend (this repo) |
+
+
 
 ---
 
