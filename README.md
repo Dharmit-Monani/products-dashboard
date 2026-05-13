@@ -1,108 +1,63 @@
-# 🛒 Products Dashboard — React SPA
+# Products Dashboard — React SPA
 
-> A production-quality **React Single Page Application** built as **Task 2** of the Alfido Tech MERN Stack Developer Internship.
-> Connects to a Node.js + Express + MongoDB REST API (Task 1) to provide a full-featured Product Management Dashboard.
-
----
+A React frontend for managing products, built as Task 2 of my Alfido Tech MERN Stack Internship. It connects to the REST API I built in Task 1 and lets you perform all CRUD operations through a clean dashboard UI.
 
 ---
 
-## ✨ Features
+## What it does
 
-- 📊 **Dashboard** — Live inventory stats (total products, inventory value, low stock, out of stock)
-- 📋 **All Products** — Grid view with real-time search, category filter & sort
-- ➕ **Create Product** — Form with full client-side validation
-- ✏️ **Edit Product** — Pre-filled update form
-- 🔍 **Product Details** — Complete product information view
-- 🗑️ **Delete Product** — Confirmation modal before deletion
-- 🌙 **Dark Mode** — Toggle with localStorage persistence
-- 🔔 **Toast Notifications** — Success/error feedback for all actions
-- 💀 **Skeleton Loaders** — Placeholder UI while data loads
-- 📱 **Responsive Design** — Works on desktop and mobile
-- 🎞️ **Smooth Animations** — Powered by Framer Motion
-- 🔎 **Search & Filter** — By name, description, category
-- 📈 **Sort** — By price (asc/desc), name, stock, newest
-- ❌ **404 Page** — Custom not found page
-- ⚡ **Error Handling** — Graceful API failure states with retry button
+- View all products in a card grid layout
+- Search products by name or category
+- Filter by category and sort by price, stock or date
+- Add a new product with form validation
+- Edit an existing product
+- View full product details
+- Delete a product with a confirmation popup
+- Dashboard shows live stats — total products, inventory value, low stock count
+- Dark mode toggle that saves your preference
+- Toast notifications for every action
+- Skeleton loaders while data is being fetched
+- Works on mobile too
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| React | ^18.2.0 | UI Framework |
-| React Router DOM | ^6.20.1 | Client-side routing |
-| Axios | ^1.6.2 | HTTP API calls |
-| Framer Motion | ^10.16.4 | Animations |
-| React Hot Toast | ^2.4.1 | Toast notifications |
-| React Icons | ^4.12.0 | Icon library |
-| Vite | ^5.0.0 | Build tool & dev server |
+- **React 18** — UI
+- **React Router DOM v6** — routing
+- **Axios** — API calls
+- **Framer Motion** — animations
+- **React Hot Toast** — notifications
+- **React Icons** — icons
+- **Vite** — build tool
 
 ---
 
-## ⚙️ Installation & Setup
+## Getting Started
 
-### Prerequisites
-- Node.js v18+
-- npm v9+
-- Backend API running on `http://localhost:5000` (see Task 1)
-
----
-
-### 1. Make sure the backend is running
+Make sure the backend (products-api) is running first.
 
 ```bash
-# In products-api folder:
+# In products-api folder
 npm run dev
-# ✅ MongoDB Connected!
-# 🚀 Server running on port 5000
+# Should show: MongoDB Connected + Server running on port 5000
 ```
 
----
-
-### 2. Install frontend dependencies
+Then set up the frontend:
 
 ```bash
 cd products-dashboard
 npm install
-```
-
----
-
-### 3. Start the development server
-
-```bash
 npm run dev
 ```
 
-App runs at: **http://localhost:5173**
+App opens at `http://localhost:5173`
 
 ---
 
-### 4. Build for production
+## Environment / API Config
 
-```bash
-npm run build
-npm run preview
-```
-
----
-
-## 🔐 Environment Variables
-
-### Backend (`products-api/.env`)
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-```
-
-> Copy from `.env.example` and fill in your MongoDB Atlas URI.
-
-### Frontend
-
-No `.env` file needed. API base URL is configured in:
+No `.env` needed for the frontend. The API URL is set in one place:
 
 ```js
 // src/services/api.js
@@ -111,101 +66,87 @@ const API = axios.create({
 });
 ```
 
----
+For the backend, create a `.env` file:
 
-## 📡 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/products` | Get all products |
-| `GET` | `/api/products/:id` | Get single product |
-| `POST` | `/api/products` | Create new product |
-| `PUT` | `/api/products/:id` | Update a product |
-| `DELETE` | `/api/products/:id` | Delete a product |
-
----
-
-## 📁 Folder Structure
-
-```
-products-dashboard/
-├── public/
-├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx          → Top navigation bar with dark mode toggle
-│   │   ├── Sidebar.jsx         → Side navigation with active link highlighting
-│   │   ├── ProductCard.jsx     → Product grid card with actions
-│   │   ├── ProductForm.jsx     → Reusable create/edit form with validation
-│   │   ├── Loader.jsx          → Spinner + skeleton loader cards
-│   │   ├── ErrorMessage.jsx    → Error display with retry button
-│   │   └── ConfirmModal.jsx    → Animated delete confirmation popup
-│   ├── pages/
-│   │   ├── Home.jsx            → Dashboard with live stats & recent products
-│   │   ├── AllProducts.jsx     → Full product list with search/filter/sort
-│   │   ├── CreateProduct.jsx   → Add new product page
-│   │   ├── EditProduct.jsx     → Update existing product page
-│   │   ├── ProductDetails.jsx  → Single product full detail view
-│   │   └── NotFound.jsx        → 404 page
-│   ├── services/
-│   │   └── api.js              → Axios instance & all API call functions
-│   ├── App.jsx                 → Route definitions
-│   ├── main.jsx                → App entry point
-│   └── index.css               → Global styles & CSS variables (light/dark)
-├── index.html
-├── vite.config.js
-├── package.json
-└── README.md
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
 ```
 
 ---
 
-## 🔗 Routes
+## Pages and Routes
 
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Home | Dashboard with stats |
-| `/products` | All Products | List with search & filter |
-| `/products/create` | Create Product | Add new product form |
-| `/products/:id` | Product Details | Single product view |
-| `/products/edit/:id` | Edit Product | Update product form |
-| `*` | Not Found | 404 page |
-
----
-
-## 🔮 Future Improvements
-
-- 🔐 **User Authentication** — JWT login/signup with protected routes
-- 📊 **Product Analytics** — Sales charts and trend graphs
-- 📤 **Export Functionality** — Download products as CSV or PDF
-- 🔍 **Advanced Filtering** — Multi-tag filter, price range slider
-- 👥 **Role-Based Access** — Admin, manager, viewer roles
-- 📷 **Image Upload** — Product photo with Cloudinary integration
-- 📦 **Bulk Actions** — Select multiple products to update/delete
-- 🌐 **Deployment** — Vercel (frontend) + Render (backend)
+| Route | Page |
+|-------|------|
+| `/` | Dashboard with stats |
+| `/products` | All products with search and filter |
+| `/products/create` | Create new product |
+| `/products/:id` | Product details |
+| `/products/edit/:id` | Edit product |
+| `*` | 404 Not Found |
 
 ---
 
-## 👤 Author
+## Folder Structure
 
-**Dharmit Monani**
-- 🏢 Alfido Tech — MERN Stack Developer Intern
-- 🪪 Candidate ID: `BS/REG/119983`
-- 📅 Internship Start: 10 May 2026
-- 👨‍💻 Domain: MERN Stack Development
+```
+src/
+├── components/
+│   ├── Navbar.jsx
+│   ├── Sidebar.jsx
+│   ├── ProductCard.jsx
+│   ├── ProductForm.jsx
+│   ├── Loader.jsx
+│   ├── ErrorMessage.jsx
+│   └── ConfirmModal.jsx
+├── pages/
+│   ├── Home.jsx
+│   ├── AllProducts.jsx
+│   ├── CreateProduct.jsx
+│   ├── EditProduct.jsx
+│   ├── ProductDetails.jsx
+│   └── NotFound.jsx
+├── services/
+│   └── api.js
+├── App.jsx
+├── main.jsx
+└── index.css
+```
 
 ---
 
-## 🔗 Related Repositories
+## API Endpoints used
 
-| Task | Repository | Description |
-|------|-----------|-------------|
-| Task 1 | [products-api](https://github.com/Dharmit-Monani/products-api) | Node.js + Express + MongoDB REST API |
-| Task 2 | [products-dashboard](https://github.com/Dharmit-Monani/products-dashboard) | React SPA Frontend (this repo) |
-
-
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/products` | Load all products |
+| GET | `/api/products/:id` | Load one product |
+| POST | `/api/products` | Create product |
+| PUT | `/api/products/:id` | Update product |
+| DELETE | `/api/products/:id` | Delete product |
 
 ---
 
-## 📄 License
+## Things I want to improve
 
-This project is built for educational and internship submission purposes.
+- Add user login and protected routes
+- Show a chart on the dashboard for inventory trends
+- Add export to CSV option
+- Add image upload for products
+- Deploy frontend on Vercel and backend on Render
+
+---
+
+## Related Repos
+
+- Task 1 — [products-api](https://github.com/Dharmit-Monani/products-api)
+- Task 2 — [products-dashboard](https://github.com/Dharmit-Monani/products-dashboard) (this repo)
+
+---
+
+## Author
+
+Dharmit Monani
+Alfido Tech Internship — MERN Stack Developer
+Candidate ID: BS/REG/119983
