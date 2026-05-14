@@ -1,0 +1,30 @@
+# Dependencies — installed fresh inside container
+node_modules
+
+# Previous builds — rebuilt inside container
+dist
+
+# Git files
+.git
+.gitignore
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode
+.idea
+
+# Screenshots and docs — not needed in container
+screenshots/
+README.md

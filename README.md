@@ -1,8 +1,8 @@
 # Products Dashboard — React SPA
 
-A React frontend for managing products with full authentication. This covers Task 2 and Task 3 of my Alfido Tech MERN Stack Internship.
+A React frontend for managing products with full authentication and Docker support. This project covers Task 2, Task 3 and Task 4 of my Alfido Tech MERN Stack Internship.
 
-It connects to the Node.js REST API and lets authenticated users manage products through a clean dashboard UI. Unauthenticated users are redirected to the login page automatically.
+It connects to the Node.js REST API and lets authenticated users manage products through a clean dashboard UI. The entire stack runs in Docker containers.
 
 ---
 
@@ -22,9 +22,10 @@ It connects to the Node.js REST API and lets authenticated users manage products
 - Toast notifications for all actions
 - Skeleton loaders while data loads
 - Confirmation modal before deleting
-- Responsive design — works on mobile too
+- Responsive on all screen sizes
 - Smooth animations with Framer Motion
 - Custom 404 page
+- Served via Nginx in Docker (port 80)
 
 ---
 
@@ -37,20 +38,21 @@ It connects to the Node.js REST API and lets authenticated users manage products
 - **React Hot Toast** — notifications
 - **React Icons** — icons
 - **Vite** — build tool
+- **Nginx** — production server inside Docker
 
 ---
 
-## Getting Started
+## Running Locally (without Docker)
 
 Make sure the backend is running first:
 
 ```bash
-# In products-api folder
+cd products-api
 npm run dev
-# Should show: MongoDB Connected + Server running on port 5000
+# MongoDB Connected + Server running on port 5000
 ```
 
-Then set up the frontend:
+Then:
 
 ```bash
 cd products-dashboard
@@ -60,18 +62,64 @@ npm run dev
 
 App opens at `http://localhost:5173`
 
-You'll see the login page. Register a new account to get started.
+---
+
+## Running with Docker
+
+The easiest way to run everything is with Docker Compose:
+
+```bash
+cd D:\Alfido
+docker compose up
+```
+
+This starts three containers:
+- MongoDB on port 27017
+- Backend on port 5000
+- Frontend on port 80 via Nginx
+
+Visit `http://localhost` in your browser — that's it.
+
+To stop:
+
+```bash
+docker compose down
+```
+
+To stop and delete all data:
+
+```bash
+docker compose down -v
+```
+
+---
+
+## Docker Setup
+
+The frontend uses a multi-stage Dockerfile:
+
+```
+Stage 1 — Node 18 Alpine
+  Install dependencies
+  Build React app with Vite
+
+Stage 2 — Nginx Alpine
+  Copy built files
+  Serve on port 80
+```
+
+Nginx is configured to handle React Router properly — refreshing any page like `/products` or `/login` works correctly.
 
 ---
 
 ## Auth Flow
 
 ```
-Open app → Login page
-Register or Login → JWT cookie set by backend
-Refresh page → /api/auth/me called → cookie verified → stay logged in
-Logout → cookie cleared → back to login page
-Try to access /products without login → redirected to login
+Open app → redirected to login page
+Register or login → JWT cookie set by backend
+Refresh page → cookie verified → stay logged in
+Logout → cookie cleared → back to login
+Try /products without login → redirected to login
 ```
 
 ---
@@ -83,32 +131,23 @@ The signup page enforces these rules with a live checklist:
 - Minimum 8 characters
 - At least 1 uppercase letter
 - At least 1 number
-- At least 1 special character (e.g. @, #, !)
+- At least 1 special character
 
-The strength meter shows Weak / Fair / Medium / Strong in real time as you type.
+The strength meter shows Weak / Fair / Medium / Strong as you type.
 
 ---
 
-## Environment / API Config
-
-No `.env` needed for frontend. The API URL is set in one place:
+## API Config
 
 ```js
 // src/services/api.js
 const API = axios.create({
   baseURL: "http://localhost:5000/api",
-  withCredentials: true, // sends httpOnly cookie with every request
+  withCredentials: true,
 });
 ```
 
-For the backend, create a `.env` file:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-JWT_EXPIRE=7d
-```
+`withCredentials: true` makes sure cookies are sent with every request — this is what makes JWT auth work correctly in Docker.
 
 ---
 
@@ -132,49 +171,49 @@ JWT_EXPIRE=7d
 ```
 src/
 ├── components/
-│   ├── Navbar.jsx          → top bar with logout button
-│   ├── Sidebar.jsx         → navigation links
-│   ├── Breadcrumb.jsx      → enhanced breadcrumb
-│   ├── ProductCard.jsx     → product card with actions
-│   ├── ProductForm.jsx     → reusable create/edit form
-│   ├── ProtectedRoute.jsx  → redirects to login if not authenticated
-│   ├── Loader.jsx          → spinner and skeleton loaders
-│   ├── ErrorMessage.jsx    → error display with retry
-│   └── ConfirmModal.jsx    → delete confirmation popup
+│   ├── Navbar.jsx
+│   ├── Sidebar.jsx
+│   ├── Breadcrumb.jsx
+│   ├── ProductCard.jsx
+│   ├── ProductForm.jsx
+│   ├── ProtectedRoute.jsx
+│   ├── Loader.jsx
+│   ├── ErrorMessage.jsx
+│   └── ConfirmModal.jsx
 ├── context/
-│   └── AuthContext.jsx     → global auth state, login/signup/logout
+│   └── AuthContext.jsx
 ├── pages/
-│   ├── Login.jsx           → login form with show/hide password
-│   ├── Signup.jsx          → signup with strength meter + checklist
-│   ├── Home.jsx            → dashboard with live stats
-│   ├── AllProducts.jsx     → product list with search/filter/sort
-│   ├── CreateProduct.jsx   → add new product
-│   ├── EditProduct.jsx     → update product
-│   ├── ProductDetails.jsx  → single product view
-│   └── NotFound.jsx        → 404 page
+│   ├── Login.jsx
+│   ├── Signup.jsx
+│   ├── Home.jsx
+│   ├── AllProducts.jsx
+│   ├── CreateProduct.jsx
+│   ├── EditProduct.jsx
+│   ├── ProductDetails.jsx
+│   └── NotFound.jsx
 ├── services/
-│   └── api.js              → axios instance with credentials
-├── App.jsx                 → route definitions with auth guards
-├── main.jsx                → app entry with AuthProvider
-└── index.css               → global styles and CSS variables
+│   └── api.js
+├── App.jsx
+├── main.jsx
+└── index.css
 ```
 
 ---
 
-## Things I want to improve later
+## Things I want to improve
 
-- Add user profile page to update name and password
-- Show which user created each product
-- Add product image upload
+- Add user profile page
+- Show product images
 - Export products to CSV
 - Deploy frontend on Vercel and backend on Render
+- Add CI/CD pipeline with GitHub Actions
 
 ---
 
 ## Related Repos
 
-- Task 1 + 3 — [products-api](https://github.com/Dharmit-Monani/products-api)
-- Task 2 — [products-dashboard](https://github.com/Dharmit-Monani/products-dashboard) (this repo)
+- Task 1 + 3 + 4 — [products-api](https://github.com/Dharmit-Monani/products-api)
+- Task 2 + 4 — [products-dashboard](https://github.com/Dharmit-Monani/products-dashboard) (this repo)
 
 ---
 
