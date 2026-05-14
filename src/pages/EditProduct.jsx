@@ -7,6 +7,7 @@ import { getProductById, updateProduct } from "../services/api";
 import ProductForm from "../components/ProductForm";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
+import Breadcrumb from "../components/Breadcrumb";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -57,10 +58,8 @@ const EditProduct = () => {
       transition={{ duration: 0.3 }}
     >
       {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <Link to="/">Home</Link> / <Link to="/products">Products</Link> /
-        <Link to={`/products/${id}`}>{product?.name}</Link> / Edit
-      </div>
+      <Breadcrumb items={[{ label: "Products", to: "/products" }, { label: product?.name, to: `/products/${id}` }, { label: "Edit" }]} />
+
 
       {/* Page Header */}
       <div className="page-header">

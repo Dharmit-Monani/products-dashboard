@@ -4,6 +4,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL: "http://localhost:5000/api",
   headers: { "Content-Type": "application/json" },
+  withCredentials: true, // httpOnly cookie automatically send hogi every request mein
 });
 
 // ─── Products API Calls ───────────────────────────────────────

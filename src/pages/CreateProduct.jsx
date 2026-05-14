@@ -5,6 +5,7 @@ import { MdAddBox } from "react-icons/md";
 import toast from "react-hot-toast";
 import { createProduct } from "../services/api";
 import ProductForm from "../components/ProductForm";
+import Breadcrumb from "../components/Breadcrumb";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
@@ -31,9 +32,8 @@ const CreateProduct = () => {
       transition={{ duration: 0.3 }}
     >
       {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <Link to="/">Home</Link> / <Link to="/products">Products</Link> / Add New
-      </div>
+      <Breadcrumb items={[{ label: "Products", to: "/products" }, { label: "Add New" }]} />
+
 
       {/* Page Header */}
       <div className="page-header">

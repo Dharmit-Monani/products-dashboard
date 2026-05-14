@@ -6,10 +6,12 @@ import {
 } from "react-icons/md";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { getAllProducts } from "../services/api";
+import { useAuth } from "../context/AuthContext";  // NEW
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 
 const Home = () => {
+  const { user } = useAuth();  // NEW — get logged in user
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -36,49 +38,28 @@ const Home = () => {
   const outOfStock = products.filter((p) => p.stock === 0).length;
 
   const stats = [
-    {
-      label: "Total Products",
-      value: totalProducts,
-      icon: <MdInventory />,
-      color: "#6366f1",
-      bg: "#e0e7ff",
-    },
-    {
-      label: "Total Inventory Value",
-      value: `₹${totalValue.toLocaleString("en-IN")}`,
-      icon: <HiCurrencyRupee />,
-      color: "#22c55e",
-      bg: "#f0fdf4",
-    },
-    {
-      label: "Low Stock Items",
-      value: lowStock,
-      icon: <MdWarning />,
-      color: "#f59e0b",
-      bg: "#fffbeb",
-    },
-    {
-      label: "Out of Stock",
-      value: outOfStock,
-      icon: <MdTrendingUp />,
-      color: "#ef4444",
-      bg: "#fef2f2",
-    },
+    { label: "Total Products", value: totalProducts, icon: <MdInventory />, color: "#6366f1", bg: "#e0e7ff" },
+    { label: "Total Inventory Value", value: `₹${totalValue.toLocaleString("en-IN")}`, icon: <HiCurrencyRupee />, color: "#22c55e", bg: "#f0fdf4" },
+    { label: "Low Stock Items", value: lowStock, icon: <MdWarning />, color: "#f59e0b", bg: "#fffbeb" },
+    { label: "Out of Stock", value: outOfStock, icon: <MdTrendingUp />, color: "#ef4444", bg: "#fef2f2" },
   ];
 
   if (loading) return <Loader text="Loading dashboard..." />;
   if (error) return <ErrorMessage message={error} onRetry={fetchProducts} />;
 
+  // Get first name only — "Dharmit Monani" → "Dharmit"
+  const firstName = user?.name?.split(" ")[0] || "there";
+
   return (
     <div>
-      {/* Welcome Banner */}
+      {/* Welcome Banner — dynamic name */}
       <motion.div
         className="welcome-banner"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1>👋 Welcome, Dharmit!</h1>
+        <h1>👋 Welcome, {firstName}!</h1>
         <p>Manage your products efficiently from your dashboard.</p>
       </motion.div>
 
@@ -105,9 +86,7 @@ const Home = () => {
 
       {/* Quick Actions */}
       <div className="card" style={{ marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "1rem" }}>
-          Quick Actions
-        </h2>
+        <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "1rem" }}>Quick Actions</h2>
         <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           <Link to="/products/create" className="btn btn-primary">
             <MdAddBox /> Add New Product
@@ -161,20 +140,15 @@ const Home = () => {
                       ₹{p.price?.toLocaleString("en-IN")}
                     </td>
                     <td style={{ padding: "0.75rem" }}>
-                      <span
-                        className="badge"
-                        style={{
-                          background: p.stock === 0 ? "#fef2f2" : p.stock < 10 ? "#fffbeb" : "#f0fdf4",
-                          color: p.stock === 0 ? "#ef4444" : p.stock < 10 ? "#f59e0b" : "#22c55e",
-                        }}
-                      >
+                      <span className="badge" style={{
+                        background: p.stock === 0 ? "#fef2f2" : p.stock < 10 ? "#fffbeb" : "#f0fdf4",
+                        color: p.stock === 0 ? "#ef4444" : p.stock < 10 ? "#f59e0b" : "#22c55e",
+                      }}>
                         {p.stock}
                       </span>
                     </td>
                     <td style={{ padding: "0.75rem" }}>
-                      <Link to={`/products/${p._id}`} className="btn btn-secondary btn-sm">
-                        View
-                      </Link>
+                      <Link to={`/products/${p._id}`} className="btn btn-secondary btn-sm">View</Link>
                     </td>
                   </tr>
                 ))}

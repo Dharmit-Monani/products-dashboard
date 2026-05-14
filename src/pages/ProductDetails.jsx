@@ -8,6 +8,7 @@ import { getProductById, deleteProduct } from "../services/api";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import ConfirmModal from "../components/ConfirmModal";
+import Breadcrumb from "../components/Breadcrumb";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -65,9 +66,8 @@ const ProductDetails = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <Link to="/">Home</Link> / <Link to="/products">Products</Link> / {product.name}
-        </div>
+        <Breadcrumb items={[{ label: "Products", to: "/products" }, { label: product?.name }]} />
+    
 
         {/* Page Header */}
         <div className="page-header">
